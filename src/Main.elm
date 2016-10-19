@@ -22,17 +22,47 @@ spanText =
       ]
 
 
+group : Attribute a
+group =
+  style
+    [ ("display", "block")
+    , ("clear", "both")
+    , ("border", "solid 1px #000")
+    , ("margin-bottom", "12px")
+    , ("padding", "4px")
+    ]
+
+
 view model =
   div []
-    [ span [ spanText ] [ text (simpleFunc1 Simple1) ]
-    , span [ spanText ] [ text (simpleFunc1 Simple2) ]
-    ]
+      [ div [ group ]
+            [ span [ spanText ] [ text (simpleFunc Simple1) ]
+            , span [ spanText ] [ text (simpleFunc Simple2) ]
+            ]
+      , div [ group ]
+            [ span [ spanText ] [ text (differentFunc (AString "test")) ]
+            , span [ spanText ] [ text (differentFunc (AInt 2)) ]
+            , span [ spanText ] [ text (differentFunc (ABool True)) ]
+            ]
+      ]
 
 
 type Simple = Simple1 | Simple2
 
-simpleFunc1 : Simple -> String
-simpleFunc1 param =
+
+simpleFunc : Simple -> String
+simpleFunc param =
   case param of
     Simple1 -> "This is a Simple1 type" 
     Simple2 -> "This is a Simple2 type"
+
+
+type DifferentTypes = AString String | AInt Int | ABool Bool
+
+
+differentFunc : DifferentTypes -> String
+differentFunc dType =
+  case dType of
+    AString s -> "This is the string: " ++ s
+    AInt i -> "This is the int: " ++ toString i
+    ABool b -> "This is the bool: " ++ toString b
