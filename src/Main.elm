@@ -14,6 +14,11 @@ update msg model =
   model
 
 
+intToString : Int -> String
+intToString i =
+  toString i
+
+
 spanText : Attribute a
 spanText =
   style
@@ -43,6 +48,7 @@ view model =
             [ span [ spanText ] [ text (differentFunc (AString "test")) ]
             , span [ spanText ] [ text (differentFunc (AInt 2)) ]
             , span [ spanText ] [ text (differentFunc (ABool True)) ]
+            , span [ spanText ] [ text (differentFunc (AFunc intToString)) ]
             ]
       ]
 
@@ -57,7 +63,11 @@ simpleFunc param =
     Simple2 -> "This is a Simple2 type"
 
 
-type DifferentTypes = AString String | AInt Int | ABool Bool
+type DifferentTypes
+  = AString String
+  | AInt Int
+  | ABool Bool
+  | AFunc (Int -> String)
 
 
 differentFunc : DifferentTypes -> String
@@ -66,3 +76,4 @@ differentFunc dType =
     AString s -> "This is the string: " ++ s
     AInt i -> "This is the int: " ++ toString i
     ABool b -> "This is the bool: " ++ toString b
+    AFunc f -> "This is the func: receive a Int as 1 and return" ++ (f 1) ++ " as String"
