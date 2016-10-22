@@ -2,8 +2,14 @@ import Html exposing (Html, Attribute, div, span, text)
 import Html.Attributes exposing (style)
 import Html.App as App
 
+type alias Comp = { value : String
+                  , none : Compatible
+                  }
+
+
 type alias Model = { elInt : ExplicitLength Int
                    , elStr : ExplicitLength String
+                   , none : None Comp
                    }
 
 
@@ -38,6 +44,9 @@ initialModel =  { elInt = { value = "test with Int"
                           , lengthOrNumberOrAutoOrNoneOrContent = Compatible
                           , fontSize = Compatible
                           }
+                , none = { value = "None"
+                         , none = Compatible
+                         }
                 }
 
 
@@ -76,7 +85,7 @@ group =
     ]
 
 
-view {elInt, elStr} =
+view {elInt, elStr, none} =
   div []
       [ div [ group ]
             [ span [ spanText ] [ text (simpleFunc Simple1) ]
@@ -89,6 +98,7 @@ view {elInt, elStr} =
             , span [ spanText ] [ text (differentFunc (AFunc intToString)) ]
             , span [ spanText ] [ text (differentFunc (AExplicitLength elInt)) ]
             , span [ spanText ] [ text (differentFunc (AExplicitLength elStr)) ]
+            , span [ spanText ] [ text (differentFunc (ANone none)) ]
             ]
       ]
 
@@ -125,12 +135,18 @@ type alias ExplicitLength units =
   }
 
 
-type DifferentTypes units
+type alias None compatible =
+  { compatible | value : String, none : Compatible }
+
+
+
+type DifferentTypes a
   = AString String
   | AInt Int
   | ABool Bool
   | AFunc (Int -> String)
-  | AExplicitLength (ExplicitLength units)
+  | AExplicitLength (ExplicitLength a)
+  | ANone (None a)
 
 
 differentFunc : DifferentTypes a -> String
@@ -141,3 +157,4 @@ differentFunc dType =
     ABool b -> "This is the bool: " ++ toString b
     AFunc f -> "This is the func: receive a Int as 1 and return" ++ (f 1) ++ " as String"
     AExplicitLength el -> "This is the explicit length with value: " ++ el.value
+    ANone compatible -> "This is the None type: " ++ compatible.value
