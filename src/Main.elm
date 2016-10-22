@@ -2,26 +2,44 @@ import Html exposing (Html, Attribute, div, span, text)
 import Html.Attributes exposing (style)
 import Html.App as App
 
-type alias Model = ExplicitLength Int
+type alias Model = { elInt : ExplicitLength Int
+                   , elStr : ExplicitLength String
+                   }
 
 
 initialModel : Model
-initialModel =
-  { value = "test"
-  , numericValue = 1.0
-  , units = 1
-  , unitLabel = "unitLabel"
-  , length = Compatible
-  , lengthOrAuto = Compatible
-  , lengthOrNumber = Compatible
-  , lengthOrNone = Compatible
-  , lengthOrMinMaxDimension = Compatible
-  , lengthOrNoneOrMinMaxDimension = Compatible
-  , textIndent = Compatible
-  , flexBasis = Compatible
-  , lengthOrNumberOrAutoOrNoneOrContent = Compatible
-  , fontSize = Compatible
-  }
+initialModel =  { elInt = { value = "test with Int"
+                          , numericValue = 1.0
+                          , units = 1
+                          , unitLabel = "unitLabel"
+                          , length = Compatible
+                          , lengthOrAuto = Compatible
+                          , lengthOrNumber = Compatible
+                          , lengthOrNone = Compatible
+                          , lengthOrMinMaxDimension = Compatible
+                          , lengthOrNoneOrMinMaxDimension = Compatible
+                          , textIndent = Compatible
+                          , flexBasis = Compatible
+                          , lengthOrNumberOrAutoOrNoneOrContent = Compatible
+                          , fontSize = Compatible
+                          }
+                , elStr = { value = "test with String"
+                          , numericValue = 1.0
+                          , units = "1"
+                          , unitLabel = "unitLabel"
+                          , length = Compatible
+                          , lengthOrAuto = Compatible
+                          , lengthOrNumber = Compatible
+                          , lengthOrNone = Compatible
+                          , lengthOrMinMaxDimension = Compatible
+                          , lengthOrNoneOrMinMaxDimension = Compatible
+                          , textIndent = Compatible
+                          , flexBasis = Compatible
+                          , lengthOrNumberOrAutoOrNoneOrContent = Compatible
+                          , fontSize = Compatible
+                          }
+                }
+
 
 main =
   App.beginnerProgram { model = initialModel, view = view, update = update }
@@ -58,7 +76,7 @@ group =
     ]
 
 
-view model =
+view {elInt, elStr} =
   div []
       [ div [ group ]
             [ span [ spanText ] [ text (simpleFunc Simple1) ]
@@ -69,7 +87,8 @@ view model =
             , span [ spanText ] [ text (differentFunc (AInt 2)) ]
             , span [ spanText ] [ text (differentFunc (ABool True)) ]
             , span [ spanText ] [ text (differentFunc (AFunc intToString)) ]
-            , span [ spanText ] [ text (differentFunc (AExplicitLength model)) ]
+            , span [ spanText ] [ text (differentFunc (AExplicitLength elInt)) ]
+            , span [ spanText ] [ text (differentFunc (AExplicitLength elStr)) ]
             ]
       ]
 
