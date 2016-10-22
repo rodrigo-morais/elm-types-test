@@ -2,9 +2,29 @@ import Html exposing (Html, Attribute, div, span, text)
 import Html.Attributes exposing (style)
 import Html.App as App
 
+type alias Model = ExplicitLength Int
+
+
+initialModel : Model
+initialModel =
+  { value = "test"
+  , numericValue = 1.0
+  , units = 1
+  , unitLabel = "unitLabel"
+  , length = Compatible
+  , lengthOrAuto = Compatible
+  , lengthOrNumber = Compatible
+  , lengthOrNone = Compatible
+  , lengthOrMinMaxDimension = Compatible
+  , lengthOrNoneOrMinMaxDimension = Compatible
+  , textIndent = Compatible
+  , flexBasis = Compatible
+  , lengthOrNumberOrAutoOrNoneOrContent = Compatible
+  , fontSize = Compatible
+  }
 
 main =
-  App.beginnerProgram { model = 0, view = view, update = update }
+  App.beginnerProgram { model = initialModel, view = view, update = update }
 
 
 type Msg = NoOp
@@ -49,6 +69,7 @@ view model =
             , span [ spanText ] [ text (differentFunc (AInt 2)) ]
             , span [ spanText ] [ text (differentFunc (ABool True)) ]
             , span [ spanText ] [ text (differentFunc (AFunc intToString)) ]
+            , span [ spanText ] [ text (differentFunc (AExplicitLength model)) ]
             ]
       ]
 
@@ -63,17 +84,41 @@ simpleFunc param =
     Simple2 -> "This is a Simple2 type"
 
 
-type DifferentTypes
+type Compatible
+  = Compatible
+
+
+type alias ExplicitLength units =
+  { value : String
+  , numericValue : Float
+  , units : units
+  , unitLabel : String
+  , length : Compatible
+  , lengthOrAuto : Compatible
+  , lengthOrNumber : Compatible
+  , lengthOrNone : Compatible
+  , lengthOrMinMaxDimension : Compatible
+  , lengthOrNoneOrMinMaxDimension : Compatible
+  , textIndent : Compatible
+  , flexBasis : Compatible
+  , lengthOrNumberOrAutoOrNoneOrContent : Compatible
+  , fontSize : Compatible
+  }
+
+
+type DifferentTypes units
   = AString String
   | AInt Int
   | ABool Bool
   | AFunc (Int -> String)
+  | AExplicitLength (ExplicitLength units)
 
 
-differentFunc : DifferentTypes -> String
+differentFunc : DifferentTypes a -> String
 differentFunc dType =
   case dType of
     AString s -> "This is the string: " ++ s
     AInt i -> "This is the int: " ++ toString i
     ABool b -> "This is the bool: " ++ toString b
     AFunc f -> "This is the func: receive a Int as 1 and return" ++ (f 1) ++ " as String"
+    AExplicitLength el -> "This is the explicit length with value: " ++ el.value
